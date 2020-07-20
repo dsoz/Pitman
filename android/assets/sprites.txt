@@ -1,0 +1,474 @@
+sprites.png
+size: 644, 12
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ancient_shield
+  rotate: false
+  xy: 1, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+background
+  rotate: false
+  xy: 13, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+blast_1
+  rotate: false
+  xy: 25, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+brass_bracelet
+  rotate: false
+  xy: 37, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+brick_1
+  rotate: false
+  xy: 49, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+brick_2
+  rotate: false
+  xy: 61, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+brick_3
+  rotate: false
+  xy: 73, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+crown
+  rotate: false
+  xy: 85, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+drill
+  rotate: false
+  xy: 97, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+fog_1
+  rotate: false
+  xy: 109, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+fog_2
+  rotate: false
+  xy: 121, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+giftBox
+  rotate: false
+  xy: 133, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+golden_bar
+  rotate: false
+  xy: 145, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+golden_cross
+  rotate: false
+  xy: 157, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+golden_egg
+  rotate: false
+  xy: 169, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+medKit
+  rotate: false
+  xy: 181, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+pile_of_coins
+  rotate: false
+  xy: 193, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player1
+  rotate: false
+  xy: 205, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player1
+  rotate: false
+  xy: 217, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player1
+  rotate: false
+  xy: 229, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player1
+  rotate: false
+  xy: 217, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player2
+  rotate: false
+  xy: 241, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player2
+  rotate: false
+  xy: 253, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player2
+  rotate: false
+  xy: 265, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player2
+  rotate: false
+  xy: 253, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player3
+  rotate: false
+  xy: 277, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player3
+  rotate: false
+  xy: 289, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player3
+  rotate: false
+  xy: 301, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player3
+  rotate: false
+  xy: 289, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player4
+  rotate: false
+  xy: 313, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player4
+  rotate: false
+  xy: 325, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player4
+  rotate: false
+  xy: 337, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player4
+  rotate: false
+  xy: 325, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rock_1
+  rotate: false
+  xy: 421, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rock_2
+  rotate: false
+  xy: 433, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rock_3
+  rotate: false
+  xy: 445, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rockDamaged_1
+  rotate: false
+  xy: 349, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rockDamaged_2
+  rotate: false
+  xy: 361, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rockMask_blast_down
+  rotate: true
+  xy: 605, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+rockMask_blast_left
+  rotate: false
+  xy: 565, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+rockMask_blast_right
+  rotate: false
+  xy: 570, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+rockMask_blast_up
+  rotate: true
+  xy: 610, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+rockMask_digg_down
+  rotate: true
+  xy: 615, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+rockMask_digg_left
+  rotate: false
+  xy: 575, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+rockMask_digg_right
+  rotate: false
+  xy: 580, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+rockMask_digg_up
+  rotate: true
+  xy: 620, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+rockTurn_1
+  rotate: false
+  xy: 373, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rockTurn_2
+  rotate: false
+  xy: 385, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rockTurn_3
+  rotate: false
+  xy: 397, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rockTurn_4
+  rotate: false
+  xy: 409, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+rubin
+  rotate: false
+  xy: 457, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+sand_1
+  rotate: false
+  xy: 493, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+sand_2
+  rotate: false
+  xy: 505, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+sand_3
+  rotate: false
+  xy: 517, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+sandMask_blast_down
+  rotate: true
+  xy: 625, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+sandMask_blast_left
+  rotate: false
+  xy: 585, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+sandMask_blast_right
+  rotate: false
+  xy: 590, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+sandMask_blast_up
+  rotate: true
+  xy: 630, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+sandMask_digg_down
+  rotate: true
+  xy: 635, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+sandMask_digg_left
+  rotate: false
+  xy: 595, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+sandMask_digg_right
+  rotate: false
+  xy: 600, 1
+  size: 3, 10
+  orig: 3, 10
+  offset: 0, 0
+  index: -1
+sandMask_digg_up
+  rotate: true
+  xy: 640, 1
+  size: 10, 3
+  orig: 10, 3
+  offset: 0, 0
+  index: -1
+sandRock_1
+  rotate: false
+  xy: 469, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+sandRock_2
+  rotate: false
+  xy: 481, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+sceptre
+  rotate: false
+  xy: 529, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+steelPlate
+  rotate: false
+  xy: 541, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+teleport
+  rotate: false
+  xy: 553, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
