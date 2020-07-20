@@ -5,26 +5,28 @@ import com.badlogic.gdx.math.Rectangle
 data class Weapon(val type: WeaponType, val startTime: Long, val cellX: Int, val cellY: Int, val rectangle: Rectangle) {
 
     fun blast(map: Array<Array<Array<String>>>): MutableList<Array<Int>>{
-        return calculateBlastCells(getBlastPattern(), map)
+        return calculateBlastCells(map)
     }
 
-    private fun calculateBlastCells(qty: IntArray, map: Array<Array<Array<String>>>): MutableList<Array<Int>>{
-        val xRange = (qty.size / 2)
+    private fun calculateBlastCells(map: Array<Array<Array<String>>>): MutableList<Array<Int>>{
+        val blastPattern = getBlastPattern()
+        val xRange = (blastPattern.size / 2)
         val explosions: MutableList<Array<Int>> = mutableListOf()
         var array: Array<Int>
 
-        for((tmp, x) in ((xRange * -1)..xRange).withIndex()){
-            for (y in (qty[tmp])* -1..qty[tmp]){
-                array =  Array(4) {0}
-                if (cellX + x < 1 || cellX + x >= GameMap.mapWidth - 2 || cellY + y < 1 || cellY + y >= GameMap.mapHeight - 2){
-                    continue
-                }
-                else{
-                    array[0] = y + cellY
-                    array[1] = x + cellX
-                    array[2] = type.damage
+        if (blastPattern.isNotEmpty()) {
+            for ((tmp, x) in ((xRange * -1)..xRange).withIndex()) {
+                for (y in (blastPattern[tmp]) * -1..blastPattern[tmp]) {
+                    array = Array(4) { 0 }
+                    if (cellX + x < 1 || cellX + x >= GameMap.mapWidth - 2 || cellY + y < 1 || cellY + y >= GameMap.mapHeight - 2) {
+                        continue
+                    } else {
+                        array[0] = y + cellY
+                        array[1] = x + cellX
+                        array[2] = type.damage
 
-                    explosions.add(array)
+                        explosions.add(array)
+                    }
                 }
             }
         }
@@ -46,6 +48,8 @@ data class Weapon(val type: WeaponType, val startTime: Long, val cellX: Int, val
                 return array
             }
             WeaponType.MINE -> intArrayOf(0,1,0)
+
+            else -> intArrayOf()
         }
     }
 }

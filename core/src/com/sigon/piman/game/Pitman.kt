@@ -485,13 +485,13 @@ class Pitman: ApplicationAdapter() {
     }
 
     private fun placeBomb(weaponType: WeaponType){
-        val tmpX = offsetX + player.xCell * scaleRatioX
-        val tmpY = offsetY - player.yCell * scaleRatioY
+        val bombX = offsetX + player.xCell * scaleRatioX
+        val bombY = offsetY - player.yCell * scaleRatioY
 
         if (map[player.yCell][player.xCell][1] == "Z"){
             map[player.yCell][player.xCell][1] = weaponType.letter
 
-            weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), player.xCell, player.yCell, Rectangle(tmpX, tmpY, scaleRatioX, scaleRatioY)))
+            weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), player.xCell, player.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
         }
     }
 }

@@ -8,7 +8,7 @@ enum class WeaponType(var price: Int, var fuseDelay: Long, var damage: Int, var 
     NUCLEAR_BOMB(805, 15_000000000, 99, "K"),
     CRUCIFIX_BOMB_SMALL(43, 6_000000000, 25, "K"),
     CRUCIFIX_BOMB_LARGE(179, 6_000000000, 50, "K"),
-    MINE(40, 2_000000000, 5, "K"),
+    MINE(40, -1, 5, "K"),
     /*
     FLAME_THROWER(619),
     NAPALM_BARREL(98),
