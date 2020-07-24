@@ -134,7 +134,7 @@ class GameMap {
                 val treasureX: Int = Random.nextInt(1, mapWidth - 1)
                 val treasureY: Int = Random.nextInt(1, mapHeight - 1)
 
-                map[treasureY][treasureX][1] = when (DistributedRandomNumberGenerator.getDistributedRandomNumber()) {
+                map[treasureY][treasureX][1] = when (PossibilityGenerator.getDistributedRandomNumber()) {
                     1 -> "f"
                     2 -> "g"
                     3 -> "h"

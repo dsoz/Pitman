@@ -9,16 +9,17 @@ enum class WeaponType(var price: Int, var fuseDelay: Long, var damage: Int, var 
     CRUCIFIX_BOMB_SMALL(43, 6_000000000, 25, "K"),
     CRUCIFIX_BOMB_LARGE(179, 6_000000000, 50, "K"),
     MINE(40, -1, 5, "K"),
+
+    FLAME_THROWER(619, 0, 10, "K"),
+    NAPALM_BARREL(98, 10_000000000, 5, "K"),
+    POLY_URETHANE(18, 10_000000000, 0, "K"),
+    C4_EXPLOSIVE(98, 10_000000000, 10, "K"),
+    CRACKER_BARREL(111, 10_000000000, 14, "K"),
+    GRENADE(371, 0, 5, "K"),
+    DIGGER_BOMB(148, 1_000000000, 15, "K"),
+    REMOTE_BOMB_SMALL(18, -1, 10, "K"),
+    REMOTE_BOMB_LARGE(80, -1, 12, "K"),
     /*
-    FLAME_THROWER(619),
-    NAPALM_BARREL(98),
-    POLY_URETHANE(18),
-    GRENADE(371),
-    C4_EXPLOSIVE(98),
-    CRACKER_BARREL(111),
-    DIGGER_BOMB(148),
-    REMOTE_BOMB_SMALL(18),
-    REMOTE_BOMB_LARGE(80),
     TELEPORT(86),
 
      */

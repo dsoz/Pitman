@@ -26,9 +26,13 @@ data class Weapon(val type: WeaponType, val startTime: Long, val cellX: Int, val
                         array[2] = type.damage
 
                         explosions.add(array)
+
                     }
                 }
             }
+        }
+        else{
+            
         }
 
         return explosions

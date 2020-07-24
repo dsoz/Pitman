@@ -8,6 +8,7 @@ class Player(var name: SpriteName, var x: Float, var y: Float, var scaleRatioX: 
     var digPower: Int = 3
     var step = 8
     var rectangle = Rectangle(x, y, scaleRatioX, scaleRatioY)
+    var moveAngle = 180f
 
     var xCell = 0
     var yCell = 0

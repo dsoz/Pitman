@@ -18,6 +18,7 @@ class Pitman: ApplicationAdapter() {
 
     private var spritesMap: MutableMap<String, Sprite> = mutableMapOf()
     private var weaponList: MutableList<Weapon> = mutableListOf()
+    private var playersList: MutableList<Player> = mutableListOf()
     private var explosionList: MutableList<kotlin.Array<Int>> = mutableListOf()
 
     private lateinit var animation: Animation<TextureRegion>
@@ -28,7 +29,7 @@ class Pitman: ApplicationAdapter() {
     private var scaleRatioX = 30f
     private var scaleRatioY = 30f
     private var stateTime = 0f
-    private var playerAngle = 180f
+   // private var playerAngle = 180f
     private var player =  Player(SpriteName.PLAYER_1, 80f, 870f, scaleRatioX, scaleRatioY)
 
     private lateinit var buttonSprite: Sprite
@@ -44,8 +45,11 @@ class Pitman: ApplicationAdapter() {
         batch = SpriteBatch()
         textureAtlas = TextureAtlas("sprites.txt")
         addSprites()
+
+        playersList.add(Player(SpriteName.PLAYER_1, offsetX + (scaleRatioX * 1), offsetY - (scaleRatioY * 1), scaleRatioX, scaleRatioY))
+        playersList.add(Player(SpriteName.PLAYER_2, offsetX + scaleRatioX * (GameMap.mapWidth - 1), offsetY - (scaleRatioY * GameMap.mapHeight), scaleRatioX, scaleRatioY))
         
-        animation = Animation<TextureRegion>(0.1f, textureAtlas.findRegions(player.name.fileName), Animation.PlayMode.LOOP)
+        animation = Animation<TextureRegion>(0.1f, textureAtlas.findRegions(playersList[0].name.fileName), Animation.PlayMode.LOOP)
         stateTime = 0f
 
         map = GameMap.generateMap()
@@ -53,6 +57,7 @@ class Pitman: ApplicationAdapter() {
 
         startTime = TimeUtils.nanoTime()
 
+        ////////////////////////////////
         buttonSwitchSprite = Sprite(Texture("button_switch.png"))
         buttonSwitchSprite.setSize(300f, 300f)
         buttonSwitchSprite.setPosition(offsetX + GameMap.mapWidth * scaleRatioX + 150, offsetY - 200)
@@ -60,6 +65,7 @@ class Pitman: ApplicationAdapter() {
         buttonSprite = Sprite(Texture("button_put.png"))
         buttonSprite.setSize(300f, 300f)
         buttonSprite.setPosition(offsetX + GameMap.mapWidth * scaleRatioX + 150, offsetY - 600)
+        ///////////////////////////////////////
 
         currentWeapon = WeaponType.values()[1]
     }
@@ -74,11 +80,25 @@ class Pitman: ApplicationAdapter() {
 
         drawMap(map)
 
+        checkPlayerAction()
+        checkPlacedBomb()
+
+        move(player.moveAngle)
+        batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, player.moveAngle)
+
+        batch.end()
+    }
+
+    override fun dispose() {
+        batch.dispose()
+        textureAtlas.dispose()
+    }
+
+    private fun checkPlayerAction(){
         if (Gdx.input.isTouched){
             if (Gdx.input.x >= offsetX + GameMap.mapWidth * scaleRatioX + 150 && Gdx.input.x <= offsetX + GameMap.mapWidth * scaleRatioX + 450
                     && (Gdx.graphics.height - 1 - Gdx.input.y) <= offsetY + 100 && (Gdx.graphics.height - 1 - Gdx.input.y) >= offsetY - 200){
 
-                println("--  ${Gdx.graphics.height - 1 - Gdx.input.y}")
                 val tmp = WeaponType.values().indexOf(currentWeapon)
 
                 currentWeapon = if (tmp + 1 <= WeaponType.values().size - 1){
@@ -89,19 +109,29 @@ class Pitman: ApplicationAdapter() {
 
             else if (Gdx.input.x >= offsetX + GameMap.mapWidth * scaleRatioX + 150 && Gdx.input.x <= offsetX + GameMap.mapWidth * scaleRatioX + 450
                     && (Gdx.graphics.height - 1 - Gdx.input.y) <= offsetY - 300 && (Gdx.graphics.height - 1 - Gdx.input.y) >= offsetY - 600){
-              //  println("--  ${Gdx.graphics.height - 1 - Gdx.input.y}")
 
-                placeBomb(currentWeapon)
+                for (player in playersList){
+                    if (player.name == SpriteName.PLAYER_1)
+                        placeBomb(currentWeapon, player)
+                }
             }
 /*
             if (Gdx.input.x >= offsetX + scaleRatioX * (GameMap.mapWidth - 1) && Gdx.input.x <= offsetX + scaleRatioX * GameMap.mapWidth){
                 placeBomb(WeaponType.SMALL_SHELL)
             }
  */
-            else
-                playerAngle = getMoveAngle()
-        }
+            else {
+                for (player in playersList){
+                    if (player.name == SpriteName.PLAYER_1){
+                        playersList[playersList.indexOf(player)].moveAngle = getMoveAngle()
+                    }
+                }
 
+                //   player.moveAngle = getMoveAngle()
+            }
+        }
+    }
+    private fun checkPlacedBomb(){
         /*
         if ( TimeUtils.timeSinceNanos(startTime) >= 5000000000) {
           // println((TimeUtils.nanoTime() - startTime) / 1000000000)
@@ -115,13 +145,18 @@ class Pitman: ApplicationAdapter() {
 
             while (mutableIterator.hasNext()){
                 val weapon = mutableIterator.next()
+                var tmpOverlaps = false
 
-                if (map[weapon.cellY][weapon.cellX][0] != "-1" && !Intersector.overlaps(player.rectangle, weapon.rectangle)){
+                for (player in playersList){
+                    if (Intersector.overlaps(player.rectangle, weapon.rectangle))
+                        tmpOverlaps = true
+                }
+
+                if (map[weapon.cellY][weapon.cellX][0] != "-1" && !tmpOverlaps){
                     map[weapon.cellY][weapon.cellX][0] = "-1"
                 }
 
                 if (TimeUtils.timeSinceNanos(weapon.startTime) >= weapon.type.fuseDelay){
-                   // map[weapon.cellY][weapon.cellX][1] = "8"
                     explosionList.addAll(weapon.blast(map))
 
                     mutableIterator.remove()
@@ -136,6 +171,7 @@ class Pitman: ApplicationAdapter() {
             var x: Int
             var cellHealth: Int
             var blastDamage: Int
+            var blastRectangle: Rectangle
 
             while (mutableIterator.hasNext()){
                 blast = mutableIterator.next()
@@ -144,16 +180,21 @@ class Pitman: ApplicationAdapter() {
                 x = blast[1]
                 blastDamage = blast[2]
                 cellHealth = map[y][x][0].toInt()
+                blastRectangle =  Rectangle(x.toFloat(), y.toFloat(), scaleRatioX, scaleRatioY)
 
-                if (Intersector.overlaps(player.rectangle, Rectangle(x.toFloat(), y.toFloat(), scaleRatioX, scaleRatioY))){
-                    player.health -= blastDamage
+                for (player in playersList){
+                    if (Intersector.overlaps(player.rectangle, blastRectangle)){
+                        val index = playersList.indexOf(player)
+                        playersList[index].health -= blastDamage
 
-                    if (player.health <= 0){
-                        map[y][x][0] = "0"
-                        map[y][x][1] = "z"
+                        if (playersList[index].health <= 0){
+                            map[y][x][0] = "0"
+                            map[y][x][1] = "z"
+                        }
                     }
                 }
-                if (cellHealth - blastDamage < 0 || cellHealth - blastDamage == 0) {
+
+                if (cellHealth - blastDamage <= 0) {
                     map[y][x][0] = "0"
                     map[y][x][1] = "G"
 
@@ -170,17 +211,6 @@ class Pitman: ApplicationAdapter() {
                 mutableIterator.remove()
             }
         }
-
-        move(playerAngle)
-
-        batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, playerAngle)
-
-        batch.end()
-    }
-
-    override fun dispose() {
-        batch.dispose()
-        textureAtlas.dispose()
     }
 
     private fun addSprites(){
@@ -484,14 +514,14 @@ class Pitman: ApplicationAdapter() {
             startTime = TimeUtils.nanoTime()
     }
 
-    private fun placeBomb(weaponType: WeaponType){
-        val bombX = offsetX + player.xCell * scaleRatioX
-        val bombY = offsetY - player.yCell * scaleRatioY
+    private fun placeBomb(weaponType: WeaponType, currentPlayer: Player){
+        val bombX = offsetX + currentPlayer.xCell * scaleRatioX
+        val bombY = offsetY - currentPlayer.yCell * scaleRatioY
 
-        if (map[player.yCell][player.xCell][1] == "Z"){
-            map[player.yCell][player.xCell][1] = weaponType.letter
+        if (map[currentPlayer.yCell][currentPlayer.xCell][1] == "Z"){
+            map[currentPlayer.yCell][currentPlayer.xCell][1] = weaponType.letter
 
-            weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), player.xCell, player.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
+            weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), currentPlayer.xCell, currentPlayer.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
         }
     }
 }

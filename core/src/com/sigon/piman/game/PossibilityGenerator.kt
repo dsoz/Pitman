@@ -2,7 +2,7 @@ package com.sigon.piman.game
 
 import kotlin.random.Random
 
-class DistributedRandomNumberGenerator {
+class PossibilityGenerator {
     companion object {
         private var distributionMap: MutableMap<Int, Float> = mutableMapOf()
         private var distSum: Float = 0f
