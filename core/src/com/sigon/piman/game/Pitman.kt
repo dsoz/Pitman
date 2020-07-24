@@ -19,6 +19,7 @@ class Pitman: ApplicationAdapter() {
     private var spritesMap: MutableMap<String, Sprite> = mutableMapOf()
     private var weaponList: MutableList<Weapon> = mutableListOf()
     private var playersList: MutableList<Player> = mutableListOf()
+    private var animationList: MutableList<Animation<TextureRegion>> = mutableListOf()
     private var explosionList: MutableList<kotlin.Array<Int>> = mutableListOf()
 
     private lateinit var animation: Animation<TextureRegion>
@@ -48,8 +49,11 @@ class Pitman: ApplicationAdapter() {
 
         playersList.add(Player(SpriteName.PLAYER_1, offsetX + (scaleRatioX * 1), offsetY - (scaleRatioY * 1), scaleRatioX, scaleRatioY))
         playersList.add(Player(SpriteName.PLAYER_2, offsetX + scaleRatioX * (GameMap.mapWidth - 1), offsetY - (scaleRatioY * GameMap.mapHeight), scaleRatioX, scaleRatioY))
-        
-        animation = Animation<TextureRegion>(0.1f, textureAtlas.findRegions(playersList[0].name.fileName), Animation.PlayMode.LOOP)
+
+        for (player in playersList){
+            animationList.add(Animation<TextureRegion>(0.1f, textureAtlas.findRegions(player.name.fileName), Animation.PlayMode.LOOP))
+        }
+     //   animation = Animation<TextureRegion>(0.1f, textureAtlas.findRegions(playersList[0].name.fileName), Animation.PlayMode.LOOP)
         stateTime = 0f
 
         map = GameMap.generateMap()
@@ -83,8 +87,13 @@ class Pitman: ApplicationAdapter() {
         checkPlayerAction()
         checkPlacedBomb()
 
-        move(player.moveAngle)
-        batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, player.moveAngle)
+        for (player in playersList){
+            move(player.moveAngle)
+            for (animation in animationList){
+                
+            }
+            batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, player.moveAngle)
+        }
 
         batch.end()
     }
