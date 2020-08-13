@@ -31,7 +31,8 @@ class Pitman: ApplicationAdapter() {
     private var scaleRatioY = 30f
     private var stateTime = 0f
    // private var playerAngle = 180f
-    private var player =  Player(SpriteName.PLAYER_1, 80f, 870f, scaleRatioX, scaleRatioY)
+   // private var player =  Player(SpriteName.PLAYER_1, 80f, 870f, scaleRatioX, scaleRatioY)
+    private var gameOver = false
 
     private lateinit var buttonSprite: Sprite
     private lateinit var buttonSwitchSprite: Sprite
@@ -44,16 +45,16 @@ class Pitman: ApplicationAdapter() {
 
     override fun create() {
         batch = SpriteBatch()
-        textureAtlas = TextureAtlas("sprites.txt")
+        textureAtlas = TextureAtlas("sprites_2.txt")
         addSprites()
 
-        playersList.add(Player(SpriteName.PLAYER_1, offsetX + (scaleRatioX * 1), offsetY - (scaleRatioY * 1), scaleRatioX, scaleRatioY))
-        playersList.add(Player(SpriteName.PLAYER_2, offsetX + scaleRatioX * (GameMap.mapWidth - 1), offsetY - (scaleRatioY * GameMap.mapHeight), scaleRatioX, scaleRatioY))
+        playersList.add(Player(SpriteName.PLAYER_USER, offsetX + (scaleRatioX * 1), offsetY - (scaleRatioY * 1), scaleRatioX, scaleRatioY))
+        playersList.add(Player(SpriteName.PLAYER_2, offsetX + scaleRatioX * (GameMap.mapWidth - 2), offsetY - (scaleRatioY * (GameMap.mapHeight - 2)), scaleRatioX, scaleRatioY))
 
         for (player in playersList){
             animationList.add(Animation<TextureRegion>(0.1f, textureAtlas.findRegions(player.name.fileName), Animation.PlayMode.LOOP))
         }
-     //   animation = Animation<TextureRegion>(0.1f, textureAtlas.findRegions(playersList[0].name.fileName), Animation.PlayMode.LOOP)
+        animation = Animation<TextureRegion>(0.1f, textureAtlas.findRegions(playersList[0].name.fileName), Animation.PlayMode.LOOP)
         stateTime = 0f
 
         map = GameMap.generateMap()
@@ -83,18 +84,18 @@ class Pitman: ApplicationAdapter() {
         timeSeconds += Gdx.graphics.rawDeltaTime
 
         drawMap(map)
-
         checkPlayerAction()
         checkPlacedBomb()
 
-        for (player in playersList){
-            move(player.moveAngle)
-            for (animation in animationList){
-                
+        if (!gameOver) {
+            for (player in playersList) {
+                move(player) //////+
+                batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, player.moveAngle) ///////+
             }
-            batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, player.moveAngle)
         }
 
+        // move(player.moveAngle)
+        // batch.draw(currentFrame, player.x, player.y, scaleRatioX / 2, scaleRatioY / 2, scaleRatioX, scaleRatioY, 1f, 1f, player.moveAngle)
         batch.end()
     }
 
@@ -120,7 +121,7 @@ class Pitman: ApplicationAdapter() {
                     && (Gdx.graphics.height - 1 - Gdx.input.y) <= offsetY - 300 && (Gdx.graphics.height - 1 - Gdx.input.y) >= offsetY - 600){
 
                 for (player in playersList){
-                    if (player.name == SpriteName.PLAYER_1)
+                    if (player.name == SpriteName.PLAYER_USER)
                         placeBomb(currentWeapon, player)
                 }
             }
@@ -131,8 +132,8 @@ class Pitman: ApplicationAdapter() {
  */
             else {
                 for (player in playersList){
-                    if (player.name == SpriteName.PLAYER_1){
-                        playersList[playersList.indexOf(player)].moveAngle = getMoveAngle()
+                    if (player.name == SpriteName.PLAYER_USER){
+                        playersList[playersList.indexOf(player)].moveAngle = getMoveAngle(player)
                     }
                 }
 
@@ -140,6 +141,7 @@ class Pitman: ApplicationAdapter() {
             }
         }
     }
+
     private fun checkPlacedBomb(){
         /*
         if ( TimeUtils.timeSinceNanos(startTime) >= 5000000000) {
@@ -176,8 +178,8 @@ class Pitman: ApplicationAdapter() {
         if (explosionList.isNotEmpty()){
             val mutableIterator = explosionList.iterator()
             var blast: kotlin.Array<Int>
-            var y: Int
-            var x: Int
+            var yCell: Int
+            var xCell: Int
             var cellHealth: Int
             var blastDamage: Int
             var blastRectangle: Rectangle
@@ -185,11 +187,11 @@ class Pitman: ApplicationAdapter() {
             while (mutableIterator.hasNext()){
                 blast = mutableIterator.next()
 
-                y = blast[0]
-                x = blast[1]
+                yCell = blast[0]
+                xCell = blast[1]
                 blastDamage = blast[2]
-                cellHealth = map[y][x][0].toInt()
-                blastRectangle =  Rectangle(x.toFloat(), y.toFloat(), scaleRatioX, scaleRatioY)
+                cellHealth = map[yCell][xCell][0].toInt()
+                blastRectangle =  Rectangle((offsetX + (blast[1] * scaleRatioX)).toFloat(), (offsetY - (blast[0] * scaleRatioY)).toFloat(), scaleRatioX, scaleRatioY)
 
                 for (player in playersList){
                     if (Intersector.overlaps(player.rectangle, blastRectangle)){
@@ -197,25 +199,29 @@ class Pitman: ApplicationAdapter() {
                         playersList[index].health -= blastDamage
 
                         if (playersList[index].health <= 0){
-                            map[y][x][0] = "0"
-                            map[y][x][1] = "z"
+                            println("-----------death")
+
+                            map[yCell][xCell][0] = "0"
+                            map[yCell][xCell][1] = "z"
+
+                            gameOver = true
                         }
                     }
                 }
 
                 if (cellHealth - blastDamage <= 0) {
-                    map[y][x][0] = "0"
-                    map[y][x][1] = "G"
+                    map[yCell][xCell][0] = "0"
+                    map[yCell][xCell][1] = "G"
 
-                    for (i in 2 until map[y][x].size){
-                        map[y][x][i] = ""
+                    for (i in 2 until map[yCell][xCell].size){
+                        map[yCell][xCell][i] = ""
                     }
-                    drawSprites(map[y][x][1], offsetX + x * scaleRatioX, offsetY - y * scaleRatioY)
+                    drawSprites(map[yCell][xCell][1], offsetX + xCell * scaleRatioX, offsetY - yCell * scaleRatioY)
 
-                    GameMap.addMask(map, x, y, false)
+                    GameMap.addMask(map, xCell, yCell, false)
                 }
                 else
-                    map[y][x][0] = (cellHealth - blastDamage).toString()
+                    map[yCell][xCell][0] = (cellHealth - blastDamage).toString()
 
                 mutableIterator.remove()
             }
@@ -238,7 +244,7 @@ class Pitman: ApplicationAdapter() {
         val name = spriteProcessing(spriteLetter)
         val sprite = spritesMap[name.fileName]
 
-
+        /*
         if (name == SpriteName.ROCK_DIGG_RIGHT || name == SpriteName.ROCK_BLAST_RIGHT || name == SpriteName.SAND_DIGG_RIGHT || name == SpriteName.SAND_BLAST_RIGHT){
             sprite?.setPosition(x + 20, y)
             sprite?.setSize(10f, 30f)
@@ -263,6 +269,12 @@ class Pitman: ApplicationAdapter() {
             sprite?.setPosition(x, y)
             sprite?.setSize(scaleRatioX, scaleRatioY)
         }
+        sprite?.draw(batch)
+
+         */
+
+        sprite?.setPosition(x, y)
+        sprite?.setSize(scaleRatioX, scaleRatioY)
         sprite?.draw(batch)
     }
 
@@ -299,15 +311,16 @@ class Pitman: ApplicationAdapter() {
             "F" -> SpriteName.MEDKIT
             "J" -> SpriteName.GIFTBOX
             "K" -> SpriteName.DRILL
-            //   "L" -> SpriteName.ROCK_DAMAGED_2
-            //   "M" -> SpriteName.ROCK_DAMAGED_2
-            //   "N" -> SpriteName.ROCK_DAMAGED_2
-            //   "W" -> SpriteName.ROCK_DAMAGED_2
-            //   "X" -> SpriteName.ROCK_DAMAGED_2
-            //   "Y" -> SpriteName.ROCK_DAMAGED_2
-            //   "6" -> SpriteName.ROCK_DAMAGED_2
-            //   "7" -> SpriteName.ROCK_DAMAGED_2
-            //   "9" -> SpriteName.ROCK_DAMAGED_2
+            "L" -> SpriteName.SHELL_SMALL
+            "M" -> SpriteName.SHELL_LARGE
+            "N" -> SpriteName.DYNAMITE
+            "W" -> SpriteName.NUCLEAR_BOMB
+            "X" -> SpriteName.CRUCIFIX_BOMB_SMALL
+            "Y" -> SpriteName.CRUCIFIX_BOMB_LARGE
+            "6" -> SpriteName.MINE
+            "7" -> SpriteName.DIGGER_BOMB
+            "9" -> SpriteName.NAPALM_BARREL
+
             "z" -> SpriteName.DEATH
 
             "f" -> SpriteName.BRASS_BRACELET
@@ -342,21 +355,24 @@ class Pitman: ApplicationAdapter() {
         }
     }
 
-    private  fun move(angle: Float){
+    private  fun move(player: Player){
         player.rectangle.x = player.x
         player.rectangle.y = player.y
 
-        val tmpX = if ((player.x - offsetX) % scaleRatioX < scaleRatioX / 2)
-            (player.x - offsetX) % scaleRatioX
-        else
-            (scaleRatioX - (player.x - offsetX) % scaleRatioX) * -1
+        val tmpX =
+                if ((player.x - offsetX) % scaleRatioX < scaleRatioX / 2)
+                    (player.x - offsetX) % scaleRatioX
+                else
+                    (scaleRatioX - (player.x - offsetX) % scaleRatioX) * -1
 
-        val tmpY = if ((offsetY - player.y) % scaleRatioY < scaleRatioY / 2)
-            (offsetY - player.y) % scaleRatioY
-        else
-            (scaleRatioY - (offsetY - player.y) % scaleRatioY) * -1
+        val tmpY =
+                if ((offsetY - player.y) % scaleRatioY < scaleRatioY / 2)
+                    (offsetY - player.y) % scaleRatioY
+                else
+                    (scaleRatioY - (offsetY - player.y) % scaleRatioY) * -1
 
-        when (angle) {
+
+        when (player.moveAngle) {
             0f  -> {
                 if ((offsetY - (scaleRatioY * 1)) - (player.rectangle.y + player.step) < player.step)
                     player.rectangle.y = offsetY - (scaleRatioY * 1)
@@ -391,16 +407,29 @@ class Pitman: ApplicationAdapter() {
             }
         }
 
-        if (!isOverlapsNeedDig(player.rectangle)){
+        if (!isOverlapsNeedDig(player)){
             player.x = player.rectangle.x
             player.y = player.rectangle.y
         }
 
-        player.xCell = ((player.x - offsetX) / scaleRatioX).toInt()
-        player.yCell = ((offsetY - player.y) / scaleRatioY).toInt()
+
+        player.xCell =
+                if ((player.x - offsetX) % scaleRatioX < scaleRatioX / 2)
+                  ((player.x - offsetX) / scaleRatioX).toInt()
+                else
+                    (((player.x - offsetX) / scaleRatioX).toInt()) + 1
+
+        player.yCell =
+                if ((offsetY - player.y) % scaleRatioY < scaleRatioY / 2)
+                    ((offsetY - player.y) / scaleRatioY).toInt()
+                else
+                    (((offsetY - player.y) / scaleRatioY).toInt()) + 1
+
+      //  player.xCell = ((player.x - offsetX) / scaleRatioX).toInt()
+      //  player.yCell = ((offsetY - player.y) / scaleRatioY).toInt()
     }
 
-    private fun isOverlapsNeedDig(playerRectangle: Rectangle): Boolean{
+    private fun isOverlapsNeedDig(player: Player): Boolean{
         var needToDig = false
 
         for (y in rectangleMap.indices){
@@ -408,7 +437,7 @@ class Pitman: ApplicationAdapter() {
                 val cellHealth = map[y][x][0]
                 val cellType = map[y][x][1]
 
-                if (Intersector.overlaps(playerRectangle, rectangleMap[y][x])){
+                if (Intersector.overlaps(player.rectangle, rectangleMap[y][x])){
                     if (cellHealth.toInt() < 0){
                         needToDig = true
                     }
@@ -428,7 +457,7 @@ class Pitman: ApplicationAdapter() {
                     if (cellHealth.toInt() == 0){
                         if ( cellType == "f" || cellType == "g" || cellType == "h" || cellType == "i" ||
                                 cellType == "j" || cellType == "k" || cellType == "l" || cellType == "m" || cellType == "n"){
-                            getCoins(cellType)
+                            getCoins(cellType, player)
                         }
                         if (cellType != "Z" && cellType != "F" && cellType != "J" && cellType != "K"){
                             map[y][x][1] = "Z"
@@ -444,7 +473,7 @@ class Pitman: ApplicationAdapter() {
         return needToDig
     }
 
-    private fun getMoveAngle(): Float{
+    private fun getMoveAngle(player: Player): Float{
        return if (abs(player.x -  Gdx.input.x) > abs(player.y - (Gdx.graphics.height - 1 - Gdx.input.y) )){
             if ((player.x -  Gdx.input.x) > 0) {
                 90f
@@ -463,7 +492,7 @@ class Pitman: ApplicationAdapter() {
         }
     }
 
-    private fun getCoins(cellType: String){
+    private fun getCoins(cellType: String, player: Player){
        player.money += when (cellType){
             "f" -> 10
             "g" -> 15
@@ -476,7 +505,7 @@ class Pitman: ApplicationAdapter() {
             "n" -> 100
            else -> 0
         }
-        println("Player coins: ${player.money}")
+        println("Player ${player.name.fileName} coins: ${player.money}")
     }
 
     private fun drawMap(map: kotlin.Array<kotlin.Array<kotlin.Array<String>>>){
@@ -528,9 +557,16 @@ class Pitman: ApplicationAdapter() {
         val bombY = offsetY - currentPlayer.yCell * scaleRatioY
 
         if (map[currentPlayer.yCell][currentPlayer.xCell][1] == "Z"){
-            map[currentPlayer.yCell][currentPlayer.xCell][1] = weaponType.letter
+            println("before - ${map[currentPlayer.yCell][currentPlayer.xCell][1]}")
+            map[currentPlayer.yCell][currentPlayer.xCell][1] = "8"
+            // weaponType.letter
 
-            weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), currentPlayer.xCell, currentPlayer.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
+            println("xCell - ${currentPlayer.xCell}, yCell - ${currentPlayer.yCell}")
+
+            println("after - ${map[currentPlayer.yCell][currentPlayer.xCell][1]}")
+            println("")
+
+         //   weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), currentPlayer.xCell, currentPlayer.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
         }
     }
 }

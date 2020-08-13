@@ -50,11 +50,21 @@ enum class SpriteName(var fileName: String) {
     SAND_DIGG_LEFT("sandMask_digg_left"),
     SAND_DIGG_RIGHT("sandMask_digg_right"),
 
-    PLAYER_1("player1"),
+    PLAYER_USER("player1"),
     PLAYER_2("player2"),
     PLAYER_3("player3"),
     PLAYER_4("player4"),
     DEATH("death"),
+
+    SHELL_SMALL("bomb_small"),
+    SHELL_LARGE("bomb_large"),
+    DYNAMITE("dynamite"),
+    NUCLEAR_BOMB("atomicBomb"),
+    CRUCIFIX_BOMB_SMALL("crucifixBomb_small"),
+    CRUCIFIX_BOMB_LARGE("crucifixBomb_large"),
+    MINE("mine"),
+    DIGGER_BOMB("diggerBomb"),
+    NAPALM_BARREL("napalmBarrel"),
 
     MEDKIT("medKit"),
     DRILL("drill"),

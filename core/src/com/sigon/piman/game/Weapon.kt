@@ -14,11 +14,12 @@ data class Weapon(val type: WeaponType, val startTime: Long, val cellX: Int, val
         val explosions: MutableList<Array<Int>> = mutableListOf()
         var array: Array<Int>
 
+
         if (blastPattern.isNotEmpty()) {
             for ((tmp, x) in ((xRange * -1)..xRange).withIndex()) {
                 for (y in (blastPattern[tmp]) * -1..blastPattern[tmp]) {
                     array = Array(4) { 0 }
-                    if (cellX + x < 1 || cellX + x >= GameMap.mapWidth - 2 || cellY + y < 1 || cellY + y >= GameMap.mapHeight - 2) {
+                    if (cellX + x < 1 || cellX + x >= GameMap.mapWidth - 1 || cellY + y < 1 || cellY + y >= GameMap.mapHeight - 1) {
                         continue
                     } else {
                         array[0] = y + cellY
@@ -26,17 +27,22 @@ data class Weapon(val type: WeaponType, val startTime: Long, val cellX: Int, val
                         array[2] = type.damage
 
                         explosions.add(array)
-
                     }
                 }
             }
         }
         else{
-            
+            when(type){
+                WeaponType.FLAME_THROWER -> {
+
+                }
+            }
         }
+
 
         return explosions
     }
+
 
     private fun getBlastPattern(): IntArray{
         return when(type){
@@ -48,7 +54,6 @@ data class Weapon(val type: WeaponType, val startTime: Long, val cellX: Int, val
             WeaponType.CRUCIFIX_BOMB_LARGE -> {
                 val array = IntArray(GameMap.mapWidth - 2)
                 array[cellX] = GameMap.mapHeight * 2
-
                 return array
             }
             WeaponType.MINE -> intArrayOf(0,1,0)
