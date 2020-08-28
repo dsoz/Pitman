@@ -193,22 +193,6 @@ class Pitman: ApplicationAdapter() {
                 cellHealth = map[yCell][xCell][0].toInt()
                 blastRectangle =  Rectangle((offsetX + (blast[1] * scaleRatioX)).toFloat(), (offsetY - (blast[0] * scaleRatioY)).toFloat(), scaleRatioX, scaleRatioY)
 
-                for (player in playersList){
-                    if (Intersector.overlaps(player.rectangle, blastRectangle)){
-                        val index = playersList.indexOf(player)
-                        playersList[index].health -= blastDamage
-
-                        if (playersList[index].health <= 0){
-                            println("-----------death")
-
-                            map[yCell][xCell][0] = "0"
-                            map[yCell][xCell][1] = "z"
-
-                            gameOver = true
-                        }
-                    }
-                }
-
                 if (cellHealth - blastDamage <= 0) {
                     map[yCell][xCell][0] = "0"
                     map[yCell][xCell][1] = "G"
@@ -220,8 +204,43 @@ class Pitman: ApplicationAdapter() {
 
                     GameMap.addMask(map, xCell, yCell, false)
                 }
-                else
+                else {
                     map[yCell][xCell][0] = (cellHealth - blastDamage).toString()
+                }
+
+                val playersListIterator = playersList.iterator()
+                var currentPlayer: Player
+                while (playersListIterator.hasNext()){
+                    currentPlayer = playersListIterator.next()
+
+                    if (Intersector.overlaps(currentPlayer.rectangle, blastRectangle)){
+                        val index = playersList.indexOf(currentPlayer)
+                        playersList[index].health -= blastDamage
+
+                        if (playersList[index].health <= 0){
+                            // DEATH
+                            map[yCell][xCell][0] = "0"
+                            map[yCell][xCell][1] = "z"
+
+                            gameOver = true
+                        }
+                    }
+                }
+
+                for (player in playersList){
+                    if (Intersector.overlaps(player.rectangle, blastRectangle)){
+                        val index = playersList.indexOf(player)
+                        playersList[index].health -= blastDamage
+
+                        if (playersList[index].health <= 0){
+                            // DEATH
+                            map[yCell][xCell][0] = "0"
+                            map[yCell][xCell][1] = "z"
+
+                            gameOver = true
+                        }
+                    }
+                }
 
                 mutableIterator.remove()
             }
@@ -283,6 +302,7 @@ class Pitman: ApplicationAdapter() {
             "A" -> SpriteName.SAND_1
             "B" -> SpriteName.SAND_2
             "C" -> SpriteName.SAND_3
+
             "O" -> SpriteName.ROCK_1
             "P" -> SpriteName.ROCK_2
             "Q" -> SpriteName.ROCK_3
@@ -459,7 +479,7 @@ class Pitman: ApplicationAdapter() {
                                 cellType == "j" || cellType == "k" || cellType == "l" || cellType == "m" || cellType == "n"){
                             getCoins(cellType, player)
                         }
-                        if (cellType != "Z" && cellType != "F" && cellType != "J" && cellType != "K"){
+                        if (cellType != "Z" && !WeaponType.weaponLetters.contains(cellType)){
                             map[y][x][1] = "Z"
                             for (i in 2 until map[y][x].size){
                                 map[y][x][i] = ""
@@ -557,16 +577,9 @@ class Pitman: ApplicationAdapter() {
         val bombY = offsetY - currentPlayer.yCell * scaleRatioY
 
         if (map[currentPlayer.yCell][currentPlayer.xCell][1] == "Z"){
-            println("before - ${map[currentPlayer.yCell][currentPlayer.xCell][1]}")
-            map[currentPlayer.yCell][currentPlayer.xCell][1] = "8"
-            // weaponType.letter
+            map[currentPlayer.yCell][currentPlayer.xCell][1] = weaponType.letter
 
-            println("xCell - ${currentPlayer.xCell}, yCell - ${currentPlayer.yCell}")
-
-            println("after - ${map[currentPlayer.yCell][currentPlayer.xCell][1]}")
-            println("")
-
-         //   weaponList.add(Weapon(weaponType, TimeUtils.nanoTime(), currentPlayer.xCell, currentPlayer.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
+            weaponList.add(Weapon(currentPlayer, weaponType, TimeUtils.nanoTime(), currentPlayer.xCell, currentPlayer.yCell, Rectangle(bombX, bombY, scaleRatioX, scaleRatioY)))
         }
     }
 }

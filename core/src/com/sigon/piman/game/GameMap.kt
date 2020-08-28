@@ -184,7 +184,7 @@ class GameMap {
                                    }
                                }
                             }
-                            if (tile == "1" || tile == "O" || tile == "P" || tile == "Q") {
+                            if (tile == "1" || tile == "O" || tile == "P" || tile == "Q"){
                                 tmpw = if (isDig) {
                                     when (cnt) {
                                         1 -> "q" 2 -> "o" 3 -> "p" 4 -> "e" else -> ""
