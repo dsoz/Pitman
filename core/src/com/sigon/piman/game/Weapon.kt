@@ -13,8 +13,9 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
     private fun calculateBlastCells(map: Array<Array<Array<String>>>): MutableList<Array<Int>>{
         val blastPattern = getBlastPattern(type)
         val xRange = (blastPattern.size / 2)
-        val explosions: MutableList<Array<Int>> = mutableListOf()
+        var explosions: MutableList<Array<Int>> = mutableListOf()
         var array: Array<Int>
+
 
 
         if (blastPattern.isNotEmpty()) {
@@ -44,6 +45,7 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
                 WeaponType.DIGGER_BOMB -> {
                     val blastArray = intArrayOf(1,2,3,4,3,2,1)
 
+                   explosions = recurCellFind(explosions, cellX, cellY)
                     
                 }
             }

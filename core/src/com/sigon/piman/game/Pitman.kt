@@ -111,10 +111,14 @@ class Pitman: ApplicationAdapter() {
 
                 val tmp = WeaponType.values().indexOf(currentWeapon)
 
+                currentWeapon = WeaponType.DIGGER_BOMB
+                /*
                 currentWeapon = if (tmp + 1 <= WeaponType.values().size - 1){
                     WeaponType.values()[tmp + 1]
                 }else
                     WeaponType.values()[0]
+
+                 */
             }
 
             else if (Gdx.input.x >= offsetX + GameMap.mapWidth * scaleRatioX + 150 && Gdx.input.x <= offsetX + GameMap.mapWidth * scaleRatioX + 450
