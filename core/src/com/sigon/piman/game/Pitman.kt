@@ -302,6 +302,14 @@ class Pitman: ApplicationAdapter() {
     }
 
     private fun spriteProcessing(label: String): SpriteName{
+        /*
+        for (sprite in SpriteName.values()){
+            if (sprite.fileName == label)
+                return sprite
+        }
+
+         */
+
         return when (label){
             "A" -> SpriteName.SAND_1
             "B" -> SpriteName.SAND_2
