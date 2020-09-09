@@ -302,14 +302,12 @@ class Pitman: ApplicationAdapter() {
     }
 
     private fun spriteProcessing(label: String): SpriteName{
-        /*
         for (sprite in SpriteName.values()){
-            if (sprite.fileName == label)
+            if (sprite.letter == label)
                 return sprite
         }
-
-         */
-
+        return SpriteName.BACKGROUND
+        /*
         return when (label){
             "A" -> SpriteName.SAND_1
             "B" -> SpriteName.SAND_2
@@ -343,6 +341,7 @@ class Pitman: ApplicationAdapter() {
             "F" -> SpriteName.MEDKIT
             "J" -> SpriteName.GIFTBOX
             "K" -> SpriteName.DRILL
+
             "L" -> SpriteName.SHELL_SMALL
             "M" -> SpriteName.SHELL_LARGE
             "N" -> SpriteName.DYNAMITE
@@ -369,6 +368,7 @@ class Pitman: ApplicationAdapter() {
             "b" -> SpriteName.ROCK_BLAST_DOWN
             "c" -> SpriteName.ROCK_BLAST_LEFT
             "d" -> SpriteName.ROCK_BLAST_RIGHT
+
             "e" -> SpriteName.ROCK_DIGG_UP
             "o" -> SpriteName.ROCK_DIGG_DOWN
             "p" -> SpriteName.ROCK_DIGG_LEFT
@@ -378,6 +378,7 @@ class Pitman: ApplicationAdapter() {
             "s" -> SpriteName.SAND_BLAST_DOWN
             "t" -> SpriteName.SAND_BLAST_LEFT
             "u" -> SpriteName.SAND_BLAST_RIGHT
+
             "v" -> SpriteName.SAND_DIGG_UP
             "w" -> SpriteName.SAND_DIGG_DOWN
             "x" -> SpriteName.SAND_DIGG_LEFT
@@ -385,6 +386,7 @@ class Pitman: ApplicationAdapter() {
 
             else -> SpriteName.BACKGROUND
         }
+         */
     }
 
     private  fun move(player: Player){
@@ -548,7 +550,7 @@ class Pitman: ApplicationAdapter() {
         for(y in 0 until GameMap.mapHeight){
             var positionX = offsetX
             for (x in 0 until GameMap.mapWidth){
-                if (map[y][x][1] == "G" || map[y][x][1] == "H" || map[y][x][1] == "I" && TimeUtils.timeSinceNanos(startTime) >= 500000000){
+                if ((map[y][x][1] == "G" || map[y][x][1] == "H" || map[y][x][1] == "I") && TimeUtils.timeSinceNanos(startTime) >= 500000000){
                     when(map[y][x][1]){
                         "G" -> {
                             map[y][x][1] = "H"
