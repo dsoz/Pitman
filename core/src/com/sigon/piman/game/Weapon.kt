@@ -90,13 +90,19 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
                 val explosions: MutableList<Array<Int>> = mutableListOf()
                 val blastArray = cellFind(intArrayOf(1,2,3,4,3,2,1))
 
+                /*
                 val array = Array(3) { 0 }
                 array[0] = cellY
                 array[1] = cellX
                 array[2] = 0
 
-           //     explosions.add(array)
+                 */
+
+                explosions.add(arrayOf(cellX, cellY, 0))
                 explosions.addAll(recurCellFind(explosions.toMutableSet(), cellX, cellY))
+
+                
+
                 return explosions
             }
 
