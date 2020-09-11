@@ -34,10 +34,11 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
         return explosions
     }
 
-    private fun recurCellFind(explosiveCellsSet: MutableSet<Array<Int>>, currentX: Int, currentY: Int): MutableList<Array<Int>>{
+    private fun recurCellFind(rangeCellsList: MutableList<Array<Int>> , explosiveCellsSet: MutableSet<Array<Int>>, currentX: Int, currentY: Int): MutableList<Array<Int>>{
         val tmp = arrayOf(0, 0, -1, 1)
         var cellType: String
         var isInList: Boolean
+        var isInRange = false
 
 
         for (q in 0..3){
@@ -49,6 +50,13 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
             explosionCell[1] = currentX + tmp.reversedArray()[q]
             explosionCell[2] = type.damage
            // explosiveCellsSet.stream().filter{ o -> o[0].equals(explosionCell[0]) }.findFirst().isPresent
+
+            for (rangeCell in rangeCellsList){
+                if (rangeCell[0] == explosionCell[0] && rangeCell[1] == explosionCell[1])
+                    isInRange = true
+            }
+            if (!isInRange)
+                continue
 
             if (type == WeaponType.DIGGER_BOMB){
                     if ((cellType == SpriteName.ROCK_1.letter || cellType == SpriteName.ROCK_2.letter || cellType == SpriteName.ROCK_3.letter) ||
@@ -64,7 +72,7 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
                     }
                     if (!isInList){
                         explosiveCellsSet.add(explosionCell)
-                        recurCellFind(explosiveCellsSet, currentX + tmp.reversedArray()[q],currentY + tmp[q])
+                        recurCellFind(rangeCellsList, explosiveCellsSet, currentX + tmp.reversedArray()[q],currentY + tmp[q])
                     }
                 }
             }
@@ -88,7 +96,7 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
 
             WeaponType.DIGGER_BOMB -> {
                 val explosions: MutableList<Array<Int>> = mutableListOf()
-                val blastArray = cellFind(intArrayOf(1,2,3,4,3,2,1))
+                val blastRangeArray = cellFind(intArrayOf(0,1,2,3,4,3,2,1,0))
 
                 /*
                 val array = Array(3) { 0 }
@@ -98,10 +106,10 @@ data class Weapon(val player: Player, val type: WeaponType, val startTime: Long,
 
                  */
 
-                explosions.add(arrayOf(cellX, cellY, 0))
-                explosions.addAll(recurCellFind(explosions.toMutableSet(), cellX, cellY))
+                explosions.add(arrayOf(cellY, cellX, 0))
+                explosions.addAll(recurCellFind(blastRangeArray, explosions.toMutableSet(), cellX, cellY))
 
-                
+
 
                 return explosions
             }
