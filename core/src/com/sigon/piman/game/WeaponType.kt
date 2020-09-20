@@ -7,18 +7,23 @@ enum class WeaponType(var price: Int, var fuseDelay: Long, var damage: Int, var 
     NUCLEAR_BOMB(805, 15_000000000, 99, false,"W"),
     CRUCIFIX_BOMB_SMALL(43, 6_000000000, 25, false,"X"),
     CRUCIFIX_BOMB_LARGE(179, 6_000000000, 50, false,"Y"),
-    MINE(40, -1, 5, false,"6"),
+
+
     DIGGER_BOMB(148, 1_000000000, 15, false,"7"),
-    NAPALM_BARREL(98, 10_000000000, 5, false, "K"),
+    NAPALM_BARREL(98, 10_000000000, 5, false, "["),
+    FLAME_THROWER(619, 0, 10, false,"]");
 
-    FLAME_THROWER(619, 0, 10, false,"K"),
-    POLY_URETHANE(18, 10_000000000, 0, false,"K"),
-    C4_EXPLOSIVE(98, 10_000000000, 10, false,"K"),
-    CRACKER_BARREL(111, 10_000000000, 14,  false,"K"),
-    GRENADE(371, 0, 5, false,"K"),
-    REMOTE_BOMB_SMALL(18, -1, 10, true,"K"),
-    REMOTE_BOMB_LARGE(80, -1, 12,true,"K");
+    /*
+    MINE(40, -1, 5, false,"Я"),
+    POLY_URETHANE(18, 10_000000000, 0, false,"Ч"),
+    C4_EXPLOSIVE(98, 10_000000000, 10, false,"С"),
+    CRACKER_BARREL(111, 10_000000000, 14,  false,"М"),
+    GRENADE(371, 0, 5, false,"И"),
+    REMOTE_BOMB_SMALL(18, -1, 10, true,"Ц"),
+    REMOTE_BOMB_LARGE(80, -1, 12,true,"Г");
 
+
+     */
 
     companion object {
         var weaponLetters = mutableListOf<String>()

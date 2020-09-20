@@ -111,7 +111,7 @@ class Pitman: ApplicationAdapter() {
 
                 val tmp = WeaponType.values().indexOf(currentWeapon)
 
-                currentWeapon = WeaponType.DIGGER_BOMB
+                currentWeapon = WeaponType.SHELL_LARGE
                 /*
                 currentWeapon = if (tmp + 1 <= WeaponType.values().size - 1){
                     WeaponType.values()[tmp + 1]
@@ -162,6 +162,7 @@ class Pitman: ApplicationAdapter() {
                 val weapon = mutableIterator.next()
                 var tmpOverlaps = false
 
+
                 for (player in playersList){
                     if (Intersector.overlaps(player.rectangle, weapon.rectangle))
                         tmpOverlaps = true
@@ -172,34 +173,51 @@ class Pitman: ApplicationAdapter() {
                 }
 
                 if (TimeUtils.timeSinceNanos(weapon.startTime) >= weapon.type.fuseDelay){
-                    explosionList.addAll(weapon.blast(map))
+                    val blastList = weapon.blast(map)
+                    explosionList.addAll(blastList)
+
+
+                    for (blast in blastList){
+                        if (WeaponType.weaponLetters.contains(map[blast[0]][blast[1]][1])){
+                            for (w in weaponList){
+                                if (w.cellY == blast[0] && w.cellX == blast[1]){
+                                    explosionList.addAll(w.blast(map))
+                                    w.detonate = true
+                                }
+                            }
+                        }
+                    }
+
 
                     mutableIterator.remove()
                 }
+                if (weapon.detonate)
+                    mutableIterator.remove()
             }
         }
 
         if (explosionList.isNotEmpty()){
-            val mutableIterator = explosionList.iterator()
+            val mutableExplosionListIterator = explosionList.iterator()
             var blast: kotlin.Array<Int>
             var yCell: Int
             var xCell: Int
             var cellHealth: Int
+            var cellType: String
             var blastDamage: Int
             var blastRectangle: Rectangle
 
-            while (mutableIterator.hasNext()){
-                blast = mutableIterator.next()
-
+            while (mutableExplosionListIterator.hasNext()){
+                blast = mutableExplosionListIterator.next()
                 yCell = blast[0]
                 xCell = blast[1]
                 blastDamage = blast[2]
                 cellHealth = map[yCell][xCell][0].toInt()
-                blastRectangle =  Rectangle((offsetX + (blast[1] * scaleRatioX)).toFloat(), (offsetY - (blast[0] * scaleRatioY)).toFloat(), scaleRatioX, scaleRatioY)
+                cellType = map[yCell][xCell][1]
+                blastRectangle =  Rectangle((offsetX + (blast[1] * scaleRatioX)), (offsetY - (blast[0] * scaleRatioY)), scaleRatioX, scaleRatioY)
 
                 if (cellHealth - blastDamage <= 0) {
                     map[yCell][xCell][0] = "0"
-                    map[yCell][xCell][1] = "G"
+                    map[yCell][xCell][1] = SpriteName.BLAST.letter
 
                     for (i in 2 until map[yCell][xCell].size){
                         map[yCell][xCell][i] = ""
@@ -224,29 +242,13 @@ class Pitman: ApplicationAdapter() {
                         if (playersList[index].health <= 0){
                             // DEATH
                             map[yCell][xCell][0] = "0"
-                            map[yCell][xCell][1] = "z"
+                            map[yCell][xCell][1] = SpriteName.DEATH.letter
 
                             gameOver = true
                         }
                     }
                 }
-
-                for (player in playersList){
-                    if (Intersector.overlaps(player.rectangle, blastRectangle)){
-                        val index = playersList.indexOf(player)
-                        playersList[index].health -= blastDamage
-
-                        if (playersList[index].health <= 0){
-                            // DEATH
-                            map[yCell][xCell][0] = "0"
-                            map[yCell][xCell][1] = "z"
-
-                            gameOver = true
-                        }
-                    }
-                }
-
-                mutableIterator.remove()
+                mutableExplosionListIterator.remove()
             }
         }
     }
@@ -550,16 +552,17 @@ class Pitman: ApplicationAdapter() {
         for(y in 0 until GameMap.mapHeight){
             var positionX = offsetX
             for (x in 0 until GameMap.mapWidth){
-                if ((map[y][x][1] == "G" || map[y][x][1] == "H" || map[y][x][1] == "I") && TimeUtils.timeSinceNanos(startTime) >= 500000000){
+                if ((map[y][x][1] == SpriteName.BLAST.letter || map[y][x][1] == SpriteName.FOG_1.letter || map[y][x][1] == SpriteName.FOG_2.letter)
+                        && TimeUtils.timeSinceNanos(startTime) >= 500000000){
                     when(map[y][x][1]){
-                        "G" -> {
-                            map[y][x][1] = "H"
+                        SpriteName.BLAST.letter -> {
+                            map[y][x][1] = SpriteName.FOG_1.letter
                         }
-                        "H" -> {
-                            map[y][x][1] = "I"
+                        SpriteName.FOG_1.letter -> {
+                            map[y][x][1] = SpriteName.FOG_2.letter
                         }
-                        "I" -> {
-                            map[y][x][1] = "Z"
+                        SpriteName.FOG_2.letter -> {
+                            map[y][x][1] = SpriteName.BACKGROUND.letter
                         }
                     }
                 }
